@@ -1,0 +1,31 @@
+package com.telenordigital.horde;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Test;
+
+public class DeviceTest {
+	@Test
+	public void testDevice() throws Exception {
+		Client client = new Client();
+		Map<String, String> tags = new HashMap<String, String>();
+		tags.put("name", "The test team");
+		Collection collection = client.createCollection(new ImmutableCollection.Builder().tags(tags).build());
+
+		List<Device> devices = new ArrayList<>();
+		for (int i = 0; i < 10; i++) {
+			String imei = String.valueOf(2*i);
+			String imsi = String.valueOf(2*i+1);
+			Device device = new ImmutableDevice.Builder().imei(imei).imsi(imsi).build();
+			device = client.createDevice(collection.id(), device);
+			devices.add(device);
+		}
+
+		for (Device d : devices) {
+			client.deleteDevice(collection.id(), d.id());
+		}
+		client.deleteCollection(collection.id());
+	}
+}
