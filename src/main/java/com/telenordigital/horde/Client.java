@@ -1,6 +1,9 @@
 package com.telenordigital.horde;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
 
@@ -15,6 +18,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 * This is the client for the Horde REST API.
 */
 public class Client {
+	private static final Logger logger = Logger.getLogger(Client.class.getName());
+
 	private static final String TOKEN_HEADER = "X-API-Token";
 	
 	private final String endpoint;
@@ -250,5 +255,40 @@ public class Client {
 	*/
 	public void deleteDevice(final String collectionID, final String deviceID) throws ClientException {
 		delete("/collections/" + collectionID + "/devices/" + deviceID);
+	}
+
+	/**
+	* Receive data messages sent by all devices in a collection.
+	*/
+	public void collectionOutput(final String collectionID, OutputHandler handler) throws ClientException {
+		output("/collections/" + collectionID, handler);
+	}
+
+	/**
+	* Receive data messages sent by a device.
+	*/
+	public void deviceOutput(final String collectionID, final String deviceID, OutputHandler handler) throws ClientException {
+		output("/collections/" + collectionID + "/devices/" + deviceID, handler);
+	}
+
+	public static interface OutputHandler {
+		public void onOutput(OutputMessage msg);
+		public void onEnd();
+	}
+
+	private void output(final String path, OutputHandler handler) throws ClientException {
+		URI uri = null;
+		String scheme = "wss";
+		try {
+			URI endpointURI = new URI(endpoint);
+			if (endpointURI.getScheme().equals("http")) {
+				scheme = "ws";
+			}
+			uri = new URI(scheme, null, endpointURI.getHost(), endpointURI.getPort(), path + "/from", null, null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		new OutputWebsocketClient(uri, token, handler);
 	}
 }
