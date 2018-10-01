@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 */
 /* package-private */ class Config {
 	/**
-	* The defaeult endpoint to use for Client. This is the address of the Horde REST API.
+	* The defaeult endpoint to use for Client. This is the address of the Telenor NB-IoT API.
 	*/
 	public final static String DEFAULT_ENDPOINT = "https://api.nbiot.telenor.io";
 	
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 		// Read file
 		try {
 			final Path configFile = Paths.get(
-				System.getProperty("user.home"), ".horde");
+				System.getProperty("user.home"), ".telenor-nbiot");
 			if (configFile.toFile().exists()) {
 				readFile(configFile);
 			}
@@ -44,11 +44,11 @@ import java.util.logging.Logger;
 			+ ioe.getMessage());
 		}
 		
-		final String envEndpoint = System.getenv("HORDE_ADDRESS");
+		final String envEndpoint = System.getenv("TELENOR_NBIOT_ADDRESS");
 		if (envEndpoint != null && !envEndpoint.isEmpty()) {
 			this.endpoint = envEndpoint;
 		}
-		final String envToken = System.getenv("HORDE_TOKEN");
+		final String envToken = System.getenv("TELENOR_NBIOT_TOKEN");
 		if (envToken != null && !envToken.isEmpty()) {
 			this.token = envToken;
 		}

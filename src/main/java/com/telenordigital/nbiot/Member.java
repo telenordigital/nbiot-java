@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 import java.util.Map;
 import javax.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ public class DeviceTest {
 	public void testDevice() throws Exception {
 		Client client = new Client();
 		Map<String, String> tags = new HashMap<String, String>();
-		tags.put("name", "The test team");
+		tags.put("name", "The test collection");
 		Collection collection = client.createCollection(new ImmutableCollection.Builder().tags(tags).build());
 
 		List<Device> devices = new ArrayList<>();

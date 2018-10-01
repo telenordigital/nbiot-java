@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -9,28 +9,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * A team represents a collection of users.
+ * A collection represents a collection of devices.
  */
 @Value.Immutable
 @Value.Style(builder = "new")
-@JsonDeserialize(builder = ImmutableTeam.Builder.class)
-public interface Team {
+@JsonDeserialize(builder = ImmutableCollection.Builder.class)
+public interface Collection {
+    /**
+     * The collection's ID
+     */
+    @JsonProperty("collectionId")
+    @Nullable
+    String id();
+
     /**
      * The team's ID
      */
     @JsonProperty("teamId")
     @Nullable
-    String id();
+    String teamID();
 
     /**
-     * The team's members
-     */
-    @JsonProperty("members")
-    @Nullable
-    Member[] members();
-
-    /**
-     * Team tags.
+     * Collection tags.
      */
     @JsonProperty("tags")
     @Nullable

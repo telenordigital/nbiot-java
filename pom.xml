@@ -8,13 +8,13 @@
 	</properties>
 
 	<groupId>com.telenordigital</groupId>
-	<artifactId>horde-java</artifactId>
+	<artifactId>nbiot-java</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Horde-Java</name>
-	<description>A Horde (Telenor NB-IoT) client</description>
+	<name>Telenor-NBIoT-Java</name>
+	<description>A Telenor NB-IoT client</description>
 
 	<organization>
 		<name>Exploratory Engineering</name>
@@ -55,7 +55,7 @@
 						</goals>
 
 						<configuration>
-							<finalName>horde-java</finalName>
+							<finalName>nbiot-java</finalName>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>

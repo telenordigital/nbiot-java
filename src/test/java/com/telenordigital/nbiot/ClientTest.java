@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 import java.net.URI;
 import java.util.logging.Level;
@@ -13,6 +13,7 @@ import javax.websocket.*;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 class OutputWebsocketClient extends Endpoint {
@@ -22,7 +23,8 @@ class OutputWebsocketClient extends Endpoint {
 	private Client.OutputHandler handler = null;
 
 	private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
-		= new com.fasterxml.jackson.databind.ObjectMapper();
+		= new com.fasterxml.jackson.databind.ObjectMapper()
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 	public OutputWebsocketClient(URI uri, String token, Client.OutputHandler handler) {
 		this.token = token;

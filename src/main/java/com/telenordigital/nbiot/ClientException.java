@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 /**
  * Generic exception whenever something (tm) goes wrong.

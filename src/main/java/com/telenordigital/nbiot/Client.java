@@ -1,4 +1,4 @@
-package com.telenordigital.horde;
+package com.telenordigital.nbiot;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,9 +13,10 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.ObjectMapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 
 /**
-* This is the client for the Horde REST API.
+* This is the client for the Telenor NB-IoT REST API.
 */
 public class Client {
 	private static final Logger logger = Logger.getLogger(Client.class.getName());
@@ -28,7 +29,8 @@ public class Client {
 	static {
 		Unirest.setObjectMapper(new ObjectMapper() {
 			private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
-				= new com.fasterxml.jackson.databind.ObjectMapper();
+				= new com.fasterxml.jackson.databind.ObjectMapper()
+					.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			
 			public <T> T readValue(String value, Class<T> valueType) {
 				try {
@@ -49,9 +51,9 @@ public class Client {
 	}
 	
 	/**
-	* Create a new Horde client using the configuration. The configuration
-	* can either be set by adding a ${HOME}/.horde file or by setting the
-	* environment variables HORDE_ADDRESS and HORDE_TOKEN. The environment
+	* Create a new Telenor NB-IoT client using the configuration. The configuration
+	* can either be set by adding a ${HOME}/.telenor-nbiot file or by setting the
+	* environment variables TELENOR_NBIOT_ADDRESS and TELENOR_NBIOT_TOKEN. The environment
 	* variables override the configuration file.
 	*/
 	public Client() throws ClientException {
@@ -63,7 +65,7 @@ public class Client {
 	}
 	
 	/**
-	* Create a new Horde client with the specified endpoint and token.
+	* Create a new Telenor NB-IoT client with the specified endpoint and token.
 	*/
 	public Client(final String endpoint, final String token) {
 		this.endpoint = endpoint;
@@ -128,7 +130,7 @@ public class Client {
 	throws ClientException {
 		try {
 			return Unirest
-				.put(endpoint + path)
+				.patch(endpoint + path)
 				.header(TOKEN_HEADER, token)
 				.body(updated)
 				.asObject(cls)
@@ -143,7 +145,9 @@ public class Client {
 	*/
 	private void delete(final String path) throws ClientException {
 		try {
-			Unirest.delete(endpoint + path).asString();
+			Unirest.delete(endpoint + path)
+				.header(TOKEN_HEADER, token)
+				.asString();
 		} catch (final UnirestException ue) {
 			throw new ClientException(ue);
 		}
