@@ -264,15 +264,15 @@ public class Client {
 	/**
 	* Receive data messages sent by all devices in a collection.
 	*/
-	public void collectionOutput(final String collectionID, OutputHandler handler) throws ClientException {
-		output("/collections/" + collectionID, handler);
+	public OutputStream collectionOutput(final String collectionID, OutputHandler handler) throws ClientException {
+		return output("/collections/" + collectionID, handler);
 	}
 
 	/**
 	* Receive data messages sent by a device.
 	*/
-	public void deviceOutput(final String collectionID, final String deviceID, OutputHandler handler) throws ClientException {
-		output("/collections/" + collectionID + "/devices/" + deviceID, handler);
+	public OutputStream deviceOutput(final String collectionID, final String deviceID, OutputHandler handler) throws ClientException {
+		return output("/collections/" + collectionID + "/devices/" + deviceID, handler);
 	}
 
 	public static interface OutputHandler {
@@ -280,7 +280,7 @@ public class Client {
 		public void onEnd();
 	}
 
-	private void output(final String path, OutputHandler handler) throws ClientException {
+	private OutputStream output(final String path, OutputHandler handler) throws ClientException {
 		URI uri = null;
 		String scheme = "wss";
 		try {
@@ -293,6 +293,6 @@ public class Client {
 			throw new RuntimeException(e);
 		}
 
-		new OutputWebsocketClient(uri, token, handler);
+		return new OutputStream(uri, token, handler);
 	}
 }

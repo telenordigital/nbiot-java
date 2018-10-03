@@ -13,7 +13,7 @@ public class OutputTest {
 		Collection collection = client.createCollection(new ImmutableCollection.Builder().build());
 
 		try {
-			client.collectionOutput(collection.id(), new Client.OutputHandler() {
+			OutputStream output = client.collectionOutput(collection.id(), new Client.OutputHandler() {
 				@Override
 				public void onOutput(OutputMessage msg) {
 				}
@@ -23,6 +23,7 @@ public class OutputTest {
 				}
 			});
 			Thread.sleep(4000);
+			output.close();
 		} finally {
 			client.deleteCollection(collection.id());
 		}

@@ -16,24 +16,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-class OutputWebsocketClient extends Endpoint {
-	private static final Logger logger = Logger.getLogger(OutputWebsocketClient.class.getName());
+public class OutputStream extends Endpoint {
+	private static final Logger logger = Logger.getLogger(OutputStream.class.getName());
 
 	private final String token;
 	private Client.OutputHandler handler = null;
+	private Session session;
 
 	private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
 		= new com.fasterxml.jackson.databind.ObjectMapper()
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-	public OutputWebsocketClient(URI uri, String token, Client.OutputHandler handler) {
+	public OutputStream(URI uri, String token, Client.OutputHandler handler) {
 		this.token = token;
 		this.handler = handler;
 
 		try {
 			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			ClientEndpointConfig config = ClientEndpointConfig.Builder.create().configurator(new Config()).build();
-			container.connectToServer(this, config, uri);
+			this.session = container.connectToServer(this, config, uri);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void close() {
+		try {
+			session.close();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
