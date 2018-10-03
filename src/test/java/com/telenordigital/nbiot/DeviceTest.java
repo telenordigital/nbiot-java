@@ -14,18 +14,21 @@ public class DeviceTest {
 		tags.put("name", "The test collection");
 		Collection collection = client.createCollection(new ImmutableCollection.Builder().tags(tags).build());
 
-		List<Device> devices = new ArrayList<>();
-		for (int i = 0; i < 10; i++) {
-			String imei = String.valueOf(2*i);
-			String imsi = String.valueOf(2*i+1);
-			Device device = new ImmutableDevice.Builder().imei(imei).imsi(imsi).build();
-			device = client.createDevice(collection.id(), device);
-			devices.add(device);
-		}
+		try {
+			List<Device> devices = new ArrayList<>();
+			for (int i = 0; i < 10; i++) {
+				String imei = String.valueOf(2*i);
+				String imsi = String.valueOf(2*i+1);
+				Device device = new ImmutableDevice.Builder().imei(imei).imsi(imsi).build();
+				device = client.createDevice(collection.id(), device);
+				devices.add(device);
+			}
 
-		for (Device d : devices) {
-			client.deleteDevice(collection.id(), d.id());
+			for (Device d : devices) {
+				client.deleteDevice(collection.id(), d.id());
+			}
+		} finally {
+			client.deleteCollection(collection.id());
 		}
-		client.deleteCollection(collection.id());
 	}
 }

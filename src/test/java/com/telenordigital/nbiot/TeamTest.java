@@ -12,7 +12,11 @@ public class TeamTest {
 		tags.put("name", "The test team");
 		Team team = new ImmutableTeam.Builder().tags(tags).build();
 		team = client.createTeam(team);
-		client.updateTeam(team);
-		client.deleteTeam(team.id());
+
+		try {
+			client.updateTeam(team);
+		} finally {
+			client.deleteTeam(team.id());
+		}
 	}
 }
