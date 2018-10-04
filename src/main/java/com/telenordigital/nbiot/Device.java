@@ -50,4 +50,13 @@ public interface Device {
     @JsonProperty("tags")
     @Nullable
     Map<String, String> tags();
+
+    @Value.Immutable
+    @Value.Style(builder = "new")
+    @JsonDeserialize(builder = ImmutableDeviceList.Builder.class)
+    static interface DeviceList {
+        @JsonProperty("devices")
+        @Nullable
+        Device[] devices();
+    }
 }

@@ -12,6 +12,9 @@ public class CollectionTest {
 		tags.put("name", "The test collection");
 		Collection collection = new ImmutableCollection.Builder().tags(tags).build();
 		collection = client.createCollection(collection);
+
+		client.collections();
+
 		try {
 			client.updateCollection(collection);
 		} finally {

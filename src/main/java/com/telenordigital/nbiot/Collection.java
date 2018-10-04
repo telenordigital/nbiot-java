@@ -35,4 +35,13 @@ public interface Collection {
     @JsonProperty("tags")
     @Nullable
     Map<String, String> tags();
+
+    @Value.Immutable
+    @Value.Style(builder = "new")
+    @JsonDeserialize(builder = ImmutableCollectionList.Builder.class)
+    static interface CollectionList {
+        @JsonProperty("collections")
+        @Nullable
+        Collection[] collections();
+    }
 }

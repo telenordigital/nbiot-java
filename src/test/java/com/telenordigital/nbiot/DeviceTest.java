@@ -24,6 +24,8 @@ public class DeviceTest {
 				devices.add(device);
 			}
 
+			client.devices(collection.id());
+
 			for (Device d : devices) {
 				client.deleteDevice(collection.id(), d.id());
 			}

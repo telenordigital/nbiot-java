@@ -165,7 +165,7 @@ public class Client {
 	* Retrieve all teams the user has access to.
 	*/
 	public Team[] teams() throws ClientException {
-		return get("/teams", Team[].class);
+		return get("/teams", Team.TeamList.class).teams();
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public class Client {
 	* Retrieve all collections the user has access to.
 	*/
 	public Collection[] collections() throws ClientException {
-		return get("/collections", Collection[].class);
+		return get("/collections", Collection.CollectionList.class).collections();
 	}
 	
 	/**
@@ -237,7 +237,7 @@ public class Client {
 	* Retrieve all devices in a collection.
 	*/
 	public Device[] devices(final String collectionID) throws ClientException {
-		return get("/collections/" + collectionID + "/devices", Device[].class);
+		return get("/collections/" + collectionID + "/devices", Device.DeviceList.class).devices();
 	}
 	
 	/**
@@ -260,6 +260,43 @@ public class Client {
 	public void deleteDevice(final String collectionID, final String deviceID) throws ClientException {
 		delete("/collections/" + collectionID + "/devices/" + deviceID);
 	}
+
+
+	/**
+	* Retrieve an output.
+	*/
+	public Output output(final String collectionID, final String outputID) throws ClientException {
+		return get("/collections/" + collectionID + "/outputs/" + outputID, Output.class);
+	}
+	
+	/**
+	* Retrieve all outputs in a collection.
+	*/
+	public Output[] outputs(final String collectionID) throws ClientException {
+		return get("/collections/" + collectionID + "/outputs", Output.OutputList.class).outputs();
+	}
+	
+	/**
+	* Create an output.
+	*/
+	public Output createOutput(final String collectionID, final Output template) throws ClientException {
+		return create("/collections/" + collectionID + "/outputs", template, Output.class);
+	}
+	
+	/**
+	* Update an output.
+	*/
+	public Output updateOutput(final String collectionID, final Output output) throws ClientException {
+		return update("/collections/" + collectionID + "/outputs/" + output.id(), output, Output.class);
+	}
+	
+	/**
+	* Delete an output.
+	*/
+	public void deleteOutput(final String collectionID, final String outputID) throws ClientException {
+		delete("/collections/" + collectionID + "/outputs/" + outputID);
+	}
+
 
 	/**
 	* Receive data messages sent by all devices in a collection.

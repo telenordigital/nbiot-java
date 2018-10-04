@@ -35,4 +35,13 @@ public interface Team {
     @JsonProperty("tags")
     @Nullable
     Map<String, String> tags();
+
+    @Value.Immutable
+    @Value.Style(builder = "new")
+    @JsonDeserialize(builder = ImmutableTeamList.Builder.class)
+    static interface TeamList {
+        @JsonProperty("teams")
+        @Nullable
+        Team[] teams();
+    }
 }

@@ -13,6 +13,8 @@ public class TeamTest {
 		Team team = new ImmutableTeam.Builder().tags(tags).build();
 		team = client.createTeam(team);
 
+		client.teams();
+
 		try {
 			client.updateTeam(team);
 		} finally {
