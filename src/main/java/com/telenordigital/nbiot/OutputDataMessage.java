@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @Value.Immutable
 @Value.Style(builder = "new")
-@JsonDeserialize(builder = ImmutableOutputMessage.Builder.class)
-public interface OutputMessage {
+@JsonDeserialize(builder = ImmutableOutputDataMessage.Builder.class)
+public interface OutputDataMessage {
 
     /**
      * Ignore this.  For internal use only.

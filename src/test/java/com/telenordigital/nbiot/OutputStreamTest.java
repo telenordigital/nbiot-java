@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 
-public class OutputTest {
+public class OutputStreamTest {
 	@Test
-	public void testOutput() throws Exception {
+	public void testOutputStream() throws Exception {
 		// This test doesn't do much, but it can be handy for manual testing.
 
 		Client client = new Client();
@@ -15,7 +15,7 @@ public class OutputTest {
 		try {
 			OutputStream output = client.collectionOutput(collection.id(), new Client.OutputHandler() {
 				@Override
-				public void onOutput(OutputMessage msg) {
+				public void onData(OutputDataMessage msg) {
 				}
 
 				@Override

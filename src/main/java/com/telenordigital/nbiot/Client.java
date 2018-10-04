@@ -276,7 +276,7 @@ public class Client {
 	}
 
 	public static interface OutputHandler {
-		public void onOutput(OutputMessage msg);
+		public void onData(OutputDataMessage msg);
 		public void onEnd();
 	}
 

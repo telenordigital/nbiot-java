@@ -53,9 +53,9 @@ public class OutputStream extends Endpoint {
 			@Override
 			public void onMessage(String text) {
 				try {
-					OutputMessage msg = jacksonObjectMapper.readValue(text, OutputMessage.class);
+					OutputDataMessage msg = jacksonObjectMapper.readValue(text, OutputDataMessage.class);
 					if (!msg.keepAlive()) {
-						handler.onOutput(msg);
+						handler.onData(msg);
 					}
 				} catch (java.io.IOException e) {
 					logger.log(Level.WARNING, "Error parsing message: {0}", e.toString());
