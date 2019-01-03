@@ -4,7 +4,7 @@ NBIoT-Java provides a Java client for the [REST API](https://api.nbiot.telenor.i
 
 ## Configuration
 
-The configuration file is located at `${HOME}/.nbiot`. The file is a simple
+The configuration file is located at `${HOME}/.telenor-nbiot`. The file is a simple
 list of key/value pairs. Additional values are ignored. Comments must start
 with a `#`:
 
