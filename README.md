@@ -29,9 +29,9 @@ accepts the address and token directly.
 Just include the following in your `pom.xml`:
 
     <dependency>
-        <groupId>com.telenordigital</groupId>
+        <groupId>engineering.exploratory</groupId>
         <artifactId>nbiot-java</artifactId>
-        <version>1.0.0</version>
+        <version>0.1.0</version>
     </dependency>
 
 ## Sample code
@@ -42,3 +42,47 @@ Just include the following in your `pom.xml`:
 * HTTP requests is done through the [Unirest library](https://github.com/Kong/unirest-java)
 * The [Immutables library](https://immutables.github.io/) is used for the REST entities
 * [Jackson](https://github.com/FasterXML/jackson) is used to serialize to and from JSON
+
+## Deployment
+
+In order to release our components to the Central Repository, we deploy them to [OSSRH](https://oss.sonatype.org/).
+
+Our OSSRH credentials and GPG key can be found in AWS Systems Manager Parameter Store.  Import the GPG key into your keyring.
+
+Make sure your `$HOME/.m2/settings.xml` file contains the following, with OSSRH `password` and `gpg.passphrase` inserted:
+
+```xml
+<settings>
+    <servers>
+        <server>
+            <id>ossrh</id>
+            <username>Exploratory Engineering</username>
+            <password></password>
+        </server>
+    </servers>
+
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <gpg.executable>gpg</gpg.executable>
+                <gpg.passphrase></gpg.passphrase>
+            </properties>
+        </profile>
+    </profiles>
+</settings>
+```
+
+Finally, run this command to deploy to OSSRH.  It will automatically be released to the Central Repository.
+
+```bash
+GPG_TTY=$(tty) mvn clean deploy -P release
+```
+
+For more information see:
+ - https://maven.apache.org/repository/guide-central-repository-upload.html
+ - https://central.sonatype.org/pages/ossrh-guide.html
+ - https://central.sonatype.org/pages/apache-maven.html
