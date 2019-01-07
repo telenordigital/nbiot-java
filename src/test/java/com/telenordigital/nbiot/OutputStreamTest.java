@@ -22,7 +22,6 @@ public class OutputStreamTest {
 				public void onEnd() {
 				}
 			});
-			Thread.sleep(4000);
 			output.close();
 		} finally {
 			client.deleteCollection(collection.id());
