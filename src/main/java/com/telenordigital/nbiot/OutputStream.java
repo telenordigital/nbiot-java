@@ -49,8 +49,13 @@ public class OutputStream implements WebSocket.Listener {
 			String fullText = text;
 			text = "";
 			try {
-				OutputDataMessage msg = jacksonObjectMapper.readValue(fullText, OutputDataMessage.class);
-				if (msg.type().equals("data")) {
+				OutputDataMessageInternal msgInternal = jacksonObjectMapper.readValue(fullText, OutputDataMessageInternal.class);
+				if (msgInternal.type().equals("data")) {
+					OutputDataMessage msg = new ImmutableOutputDataMessage.Builder()
+						.device(msgInternal.device())
+						.payload(msgInternal.payload())
+						.received(java.time.Instant.ofEpochMilli(msgInternal.received()))
+						.build();
 					handler.onData(msg);
 				}
 			} catch (java.io.IOException e) {
