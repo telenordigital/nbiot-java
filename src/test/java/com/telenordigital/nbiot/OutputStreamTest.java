@@ -1,10 +1,14 @@
 package com.telenordigital.nbiot;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Map;
 import org.junit.Test;
 
 public class OutputStreamTest {
+	private static final Logger logger = Logger.getLogger(OutputStreamTest.class.getName());
+
 	@Test
 	public void testOutputStream() throws Exception {
 		// This test doesn't do much, but it can be handy for manual testing.
@@ -16,6 +20,7 @@ public class OutputStreamTest {
 			OutputStream output = client.collectionOutput(collection.id(), new Client.OutputHandler() {
 				@Override
 				public void onData(OutputDataMessage msg) {
+					logger.log(Level.INFO, "{0}", msg);
 				}
 
 				@Override
