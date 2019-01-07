@@ -18,8 +18,8 @@ public interface OutputDataMessage {
     /**
      * Ignore this.  For internal use only.
      */
-    @JsonProperty("keepAlive")
-    boolean keepAlive();
+    @JsonProperty("type")
+    String type();
 
     /**
      * The sending device.
@@ -39,5 +39,6 @@ public interface OutputDataMessage {
      * The time received.
      */
     @JsonProperty("received")
-    int received();
+    @Nullable
+    Long received();
 }
