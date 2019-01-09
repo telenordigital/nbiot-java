@@ -36,6 +36,26 @@ Just include the following in your `pom.xml`:
 
 ## Sample code
 
+```java
+Client client = new Client();
+
+OutputStream output = client.collectionOutput("<YOUR_COLLECTION_ID>", new Client.OutputHandler() {
+    @Override
+    public void onData(OutputDataMessage msg) {
+        // do something with msg
+    }
+
+    @Override
+    public void onEnd() {
+        // reconnect?
+    }
+});
+
+// ...
+
+output.close();
+```
+
 ## Dependencies
 
 * Logging is done through `java.util.logging`
