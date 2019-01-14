@@ -1,4 +1,6 @@
 # nbiot-java
+[![Travis-CI](https://api.travis-ci.com/telenordigital/nbiot-java.svg)](https://travis-ci.com/telenordigital/nbiot-java)
+
 NBIoT-Java provides a Java client for the [REST API](https://api.nbiot.telenor.io) for
 [Telenor NB-IoT](https://nbiot.engineering).
 
