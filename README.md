@@ -4,6 +4,8 @@
 NBIoT-Java provides a Java client for the [REST API](https://api.nbiot.telenor.io) for
 [Telenor NB-IoT](https://nbiot.engineering).
 
+Java 11 is required.
+
 ## Configuration
 
 The configuration file is located at `${HOME}/.telenor-nbiot`. The file is a simple
@@ -58,14 +60,19 @@ OutputStream output = client.collectionOutput("<YOUR_COLLECTION_ID>", new Client
 output.close();
 ```
 
-## Dependencies
+## Development
 
-* Logging is done through `java.util.logging`
-* HTTP requests is done through the [Unirest library](https://github.com/Kong/unirest-java)
-* The [Immutables library](https://immutables.github.io/) is used for the REST entities
-* [Jackson](https://github.com/FasterXML/jackson) is used to serialize to and from JSON
+### Testing
 
-## Deployment
+Run `mvn test` to run the tests.
+
+### Dependencies
+
+Run `mvn versions:display-plugin-updates` to check if any plugins have newer versions available.
+
+Run `mvn versions:display-dependency-updates` to check if any dependencies have newer versions available.
+
+### Deployment
 
 In order to release our components to the Central Repository, we deploy them to [OSSRH](https://oss.sonatype.org/).
 
