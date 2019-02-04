@@ -224,6 +224,16 @@ public class Client {
 	public void deleteCollection(final String collectionID) throws ClientException {
 		delete("/collections/" + collectionID);
 	}
+
+	/**
+	 * Fetch data for a collection
+	 * @param collectionID Collection id as string
+	 * @return A list of OutputDataMessage
+	 * @throws ClientException
+	 */
+	public OutputDataMessage[] data(final String collectionID) throws ClientException {
+		return get("/collections/" + collectionID + "/data", OutputDataMessage.OutputDataMessageList.class).messages();
+	}
 	
 
 	/**
@@ -259,6 +269,17 @@ public class Client {
 	*/
 	public void deleteDevice(final String collectionID, final String deviceID) throws ClientException {
 		delete("/collections/" + collectionID + "/devices/" + deviceID);
+	}
+
+	/**
+	 * Fetch data for a device in a collection
+	 * @param collectionID Collection id as string
+     * @param  deviceID Device id as string
+	 * @return A list of OutputDataMessage
+	 * @throws ClientException
+	 */
+	public OutputDataMessage[] data(final String collectionID, final String deviceID) throws ClientException {
+		return get("/collections/" + collectionID + "/devices/" + deviceID + "/data", OutputDataMessage.OutputDataMessageList.class).messages();
 	}
 
 
