@@ -1,1 +1,5 @@
 target
+
+# Random IDE
+.idea
+*.iml
