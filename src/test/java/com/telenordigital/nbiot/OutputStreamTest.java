@@ -1,9 +1,10 @@
 package com.telenordigital.nbiot;
 
-import java.util.HashMap;
-import java.util.logging.Level;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import java.util.Map;
+
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.junit.Test;
 
 public class OutputStreamTest {
@@ -17,17 +18,21 @@ public class OutputStreamTest {
 		Collection collection = client.createCollection(new ImmutableCollection.Builder().build());
 
 		try {
-			OutputStream output = client.collectionOutput(collection.id(), new Client.OutputHandler() {
-				@Override
-				public void onData(OutputDataMessage msg) {
-					logger.log(Level.INFO, "{0}", msg);
-				}
-
-				@Override
-				public void onEnd() {
-				}
+			WebSocketClient wsClient = client.collectionOutput(collection.id(), handler -> {
+				handler.onConnect((session -> logger.info("Handler connect")));
+				handler.onError(((session, error) -> logger.warning("Handler error")));
+				handler.onClose((code, reason) -> logger.info("Handler close"));
+				handler.onMessage((message) -> {
+					logger.info("Handler message");
+					logger.info(message.toString());
+				});
 			});
-			output.close();
+
+			new CountDownLatch(1).await(2, TimeUnit.SECONDS);
+
+			wsClient.stop();
+		} catch (Exception ex) {
+			//
 		} finally {
 			client.deleteCollection(collection.id());
 		}
