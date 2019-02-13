@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.apache.http.HttpStatus;
 
@@ -230,12 +231,15 @@ public class Client {
 
 	/**
 	 * Fetch data for a collection
+	 *
 	 * @param collectionID Collection id as string
 	 * @return A list of OutputDataMessage
 	 * @throws ClientException
 	 */
 	public OutputDataMessage[] data(final String collectionID) throws ClientException {
-		return get("/collections/" + collectionID + "/data", OutputDataMessage.OutputDataMessageList.class).messages();
+		OutputDataMessageInternal[] internalDataMessageList = get("/collections/" + collectionID + "/data", OutputDataMessageInternal.OutputDataMessageListInternal.class).messages();
+
+		return mapDataMessagesFromInternal(internalDataMessageList);
 	}
 
 
@@ -276,13 +280,15 @@ public class Client {
 
 	/**
 	 * Fetch data for a device in a collection
+	 *
 	 * @param collectionID Collection id as string
-     * @param  deviceID Device id as string
+	 * @param deviceID     Device id as string
 	 * @return A list of OutputDataMessage
 	 * @throws ClientException
 	 */
 	public OutputDataMessage[] data(final String collectionID, final String deviceID) throws ClientException {
-		return get("/collections/" + collectionID + "/devices/" + deviceID + "/data", OutputDataMessage.OutputDataMessageList.class).messages();
+		OutputDataMessageInternal[] internalDataMessageList = get("/collections/" + collectionID + "/devices/" + deviceID + "/data", OutputDataMessageInternal.OutputDataMessageListInternal.class).messages();
+		return mapDataMessagesFromInternal(internalDataMessageList);
 	}
 
 
@@ -371,5 +377,15 @@ public class Client {
 		}
 
 		return client;
+	}
+
+	private OutputDataMessage[] mapDataMessagesFromInternal(OutputDataMessageInternal[] internalMessages) {
+		return Stream.of(internalMessages).map(internalDataMessage ->
+				new ImmutableOutputDataMessage.Builder()
+						.device(internalDataMessage.device())
+						.payload(internalDataMessage.payload())
+						.received(java.time.Instant.ofEpochMilli(internalDataMessage.received()))
+						.build()
+		).toArray(OutputDataMessage[]::new);
 	}
 }
