@@ -35,7 +35,7 @@ public interface OutputDataMessage {
     @Value.Immutable
     @Value.Style(builder = "new")
     @JsonDeserialize(builder = ImmutableOutputDataMessageList.Builder.class)
-    static interface OutputDataMessageList {
+    interface OutputDataMessageList {
         @JsonProperty("messages")
         @Nullable
         OutputDataMessage[] messages();

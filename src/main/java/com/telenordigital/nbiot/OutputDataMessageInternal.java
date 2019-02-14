@@ -41,4 +41,12 @@ interface OutputDataMessageInternal {
     @JsonProperty("received")
     @Nullable
     Long received();
+
+    @Value.Immutable
+    @Value.Style(builder = "new")
+    @JsonDeserialize(builder = ImmutableOutputDataMessageListInternal.Builder.class)
+    interface OutputDataMessageListInternal {
+        @JsonProperty("messages")
+        OutputDataMessageInternal[] messages();
+    }
 }
