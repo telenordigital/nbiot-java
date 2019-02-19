@@ -28,14 +28,19 @@ public class Client {
 
 	private static final String TOKEN_HEADER = "X-API-Token";
 
-	private final DataSearchParameters DEFAULT_DATA_SEARCH_PARAMS = new ImmutableDataSearchParameters.Builder()
+	private final String endpoint;
+	private final String token;
+
+	/**
+	 * Default data search parameters.
+	 *
+	 * Used if no search parameters is provided in {@link #data(String, String)} and {@link #data(String)}
+	 */
+	public final DataSearchParameters DEFAULT_DATA_SEARCH_PARAMS = new ImmutableDataSearchParameters.Builder()
 			.limit(255)
 			.since(null)
 			.until(null)
 			.build();
-
-	private final String endpoint;
-	private final String token;
 
 	static {
 		Unirest.setObjectMapper(new ObjectMapper() {
@@ -323,9 +328,10 @@ public class Client {
 	}
 
 	/**
-	 * Fetch data for a collection
+	 * Fetch data for a device
 	 *
 	 * @param collectionID Collection id as string
+	 * @param deviceId     Device id as string
 	 * @return A list of OutputDataMessage
 	 * @throws ClientException
 	 */
@@ -339,9 +345,10 @@ public class Client {
 	}
 
 	/**
-	 * Fetch data for a collection
+	 * Fetch data for a device
 	 *
 	 * @param collectionID Collection id as string
+	 * @param deviceId     Device id as string
 	 * @param parameters   Map of DataSearchParameters
 	 * @return A list of OutputDataMessage
 	 * @throws ClientException
