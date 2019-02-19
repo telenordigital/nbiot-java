@@ -2,6 +2,7 @@ package com.telenordigital.nbiot;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Instant;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,17 @@ public class Client {
 
 	private final String endpoint;
 	private final String token;
+
+	/**
+	 * Default data search parameters.
+	 *
+	 * Used if no search parameters is provided in {@link #data(String, String)} and {@link #data(String)}
+	 */
+	public final DataSearchParameters DEFAULT_DATA_SEARCH_PARAMS = new ImmutableDataSearchParameters.Builder()
+			.limit(255)
+			.since(null)
+			.until(null)
+			.build();
 
 	static {
 		Unirest.setObjectMapper(new ObjectMapper() {
@@ -104,6 +116,23 @@ public class Client {
 					.get(endpoint + path)
 					.header(TOKEN_HEADER, token)
 					.asObject(cls).getBody();
+		} catch (final UnirestException ue) {
+			throw new ClientException(ue);
+		}
+	}
+
+	private OutputDataMessageInternal.OutputDataMessageListInternal getData(final String path, DataSearchParameters parameters)
+			throws ClientException {
+		try {
+			Instant since = parameters.since();
+			Instant until = parameters.until();
+			return Unirest
+					.get(endpoint + path)
+					.header(TOKEN_HEADER, token)
+					.queryString("limit", parameters.limit())
+					.queryString("since", since != null ? since.toEpochMilli() : null)
+					.queryString("until", until != null ? until.toEpochMilli() : null)
+					.asObject(OutputDataMessageInternal.OutputDataMessageListInternal.class).getBody();
 		} catch (final UnirestException ue) {
 			throw new ClientException(ue);
 		}
@@ -237,7 +266,27 @@ public class Client {
 	 * @throws ClientException
 	 */
 	public OutputDataMessage[] data(final String collectionID) throws ClientException {
-		OutputDataMessageInternal[] internalDataMessageList = get("/collections/" + collectionID + "/data", OutputDataMessageInternal.OutputDataMessageListInternal.class).messages();
+		OutputDataMessageInternal[] internalDataMessageList = getData(
+				"/collections/" + collectionID + "/data",
+				DEFAULT_DATA_SEARCH_PARAMS
+		).messages();
+
+		return mapDataMessagesFromInternal(internalDataMessageList);
+	}
+
+	/**
+	 * Fetch data for a collection
+	 *
+	 * @param collectionID Collection id as string
+	 * @param parameters   Map of DataSearchParameters
+	 * @return A list of OutputDataMessage
+	 * @throws ClientException
+	 */
+	public OutputDataMessage[] data(final String collectionID, DataSearchParameters parameters) throws ClientException {
+		OutputDataMessageInternal[] internalDataMessageList = getData(
+				"/collections/" + collectionID + "/data",
+				parameters
+		).messages();
 
 		return mapDataMessagesFromInternal(internalDataMessageList);
 	}
@@ -279,15 +328,37 @@ public class Client {
 	}
 
 	/**
-	 * Fetch data for a device in a collection
+	 * Fetch data for a device
 	 *
 	 * @param collectionID Collection id as string
-	 * @param deviceID     Device id as string
+	 * @param deviceId     Device id as string
 	 * @return A list of OutputDataMessage
 	 * @throws ClientException
 	 */
-	public OutputDataMessage[] data(final String collectionID, final String deviceID) throws ClientException {
-		OutputDataMessageInternal[] internalDataMessageList = get("/collections/" + collectionID + "/devices/" + deviceID + "/data", OutputDataMessageInternal.OutputDataMessageListInternal.class).messages();
+	public OutputDataMessage[] data(final String collectionID, final String deviceId) throws ClientException {
+		OutputDataMessageInternal[] internalDataMessageList = getData(
+				"/collections/" + collectionID + "/devices/" + deviceId + "/data",
+				DEFAULT_DATA_SEARCH_PARAMS
+		).messages();
+
+		return mapDataMessagesFromInternal(internalDataMessageList);
+	}
+
+	/**
+	 * Fetch data for a device
+	 *
+	 * @param collectionID Collection id as string
+	 * @param deviceId     Device id as string
+	 * @param parameters   Map of DataSearchParameters
+	 * @return A list of OutputDataMessage
+	 * @throws ClientException
+	 */
+	public OutputDataMessage[] data(final String collectionID, final String deviceId, DataSearchParameters parameters) throws ClientException {
+		OutputDataMessageInternal[] internalDataMessageList = getData(
+				"/collections/" + collectionID + "/devices/" + deviceId + "/data",
+				parameters
+		).messages();
+
 		return mapDataMessagesFromInternal(internalDataMessageList);
 	}
 

@@ -4,7 +4,7 @@
 NBIoT-Java provides a Java client for the [REST API](https://api.nbiot.telenor.io) for
 [Telenor NB-IoT](https://nbiot.engineering).
 
-Java 11 is required.
+Java 8 is required.
 
 ## Configuration
 
@@ -32,32 +32,70 @@ accepts the address and token directly.
 
 Just include the following in your `pom.xml`:
 
+```
     <dependency>
         <groupId>engineering.exploratory</groupId>
         <artifactId>nbiot-java</artifactId>
         <version>0.2.0</version>
     </dependency>
-
+```
 ## Sample code
+Below you will find some examples on how to use the client.
+
+### Fetching data
+
+#### Collection with default params
+```java
+Client client = new Client();
+
+OutputDataMessage[] data = client.data("<YOUR_COLLECTION_ID>");
+```
+
+#### Collection with custom params
 
 ```java
 Client client = new Client();
 
-OutputStream output = client.collectionOutput("<YOUR_COLLECTION_ID>", new Client.OutputHandler() {
-    @Override
-    public void onData(OutputDataMessage msg) {
-        // do something with msg
-    }
+OutputDataMessage[] data = client.data("<YOUR_COLLECTION_ID>", new ImmutableDataSearchParameters.Builder()
+    .limit(500)
+    .until(Instant.now())
+    .build()
+);
+```
 
-    @Override
-    public void onEnd() {
-        // reconnect?
-    }
+#### Device with default params
+
+```java
+Client client = new Client();
+
+OutputDataMessage[] data = client.data("<YOUR_COLLECTION_ID>", "<YOUR_DEVICE_ID>");
+```
+
+#### Device with custom params
+
+```java
+Client client = new Client();
+
+OutputDataMessage[] data = client.data("<YOUR_COLLECTION_ID>", "<YOUR_DEVICE_ID>", new ImmutableDataSearchParameters.Builder()
+    .limit(500)
+    .until(Instant.now())
+    .build()
+);
+```
+
+### Setting up a data stream through the client
+```java
+Client client = new Client();
+
+client.collectionOutput("<YOUR_COLLECTION_ID>", handler -> {
+    handler.onConnect((session -> logger.info("Handler connect")));
+    handler.onError(((session, error) -> logger.warning("Handler error")));
+    handler.onClose((code, reason) -> logger.info("Handler close"));
+    handler.onMessage((message) -> {
+        logger.info("Handler message");
+        logger.info(message.toString());
+    });
 });
-
-// ...
-
-output.close();
 ```
 
 ## Development

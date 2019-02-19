@@ -16,7 +16,7 @@ public class CollectionTest {
 		client.collections();
 
 		try {
-			client.data(collection.id());
+			client.data(collection.id(), new ImmutableDataSearchParameters.Builder().build());
 			client.updateCollection(collection);
 		} finally {
 			client.deleteCollection(collection.id());
