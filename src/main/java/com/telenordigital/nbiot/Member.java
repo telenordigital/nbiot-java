@@ -27,4 +27,65 @@ public interface Member {
     @JsonProperty("role")
     @Nullable
     String role();
+
+    /**
+     * The user's name
+     */
+    @JsonProperty("name")
+    @Nullable
+    String name();
+
+    /**
+     * The user's email
+     */
+    @JsonProperty("email")
+    @Nullable
+    String email();
+
+    /**
+     * The user's phone
+     */
+    @JsonProperty("phone")
+    @Nullable
+    String phone();
+
+    /**
+     * The user's verifiedEmail
+     */
+    @JsonProperty("verifiedEmail")
+    boolean verifiedEmail();
+
+    /**
+     * The user's verifiedPhone
+     */
+    @JsonProperty("verifiedPhone")
+    boolean verifiedPhone();
+
+    /**
+     * The user's connectID
+     */
+    @JsonProperty("connectID")
+    @Nullable
+    String connectID();
+
+    /**
+     * The user's gitHubLogin
+     */
+    @JsonProperty("gitHubLogin")
+    @Nullable
+    String gitHubLogin();
+
+    /**
+     * The user's authType
+     */
+    @JsonProperty("authType")
+    @Nullable
+    String authType();
+
+    /**
+     * The user's avatarURL
+     */
+    @JsonProperty("avatarURL")
+    @Nullable
+    String avatarURL();
 }
