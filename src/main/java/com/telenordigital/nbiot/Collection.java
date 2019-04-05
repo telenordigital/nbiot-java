@@ -30,6 +30,13 @@ public interface Collection {
     String teamID();
 
     /**
+     * The field mask
+     */
+    @JsonProperty("fieldMask")
+    @Nullable
+    FieldMask fieldMask();
+
+    /**
      * Collection tags.
      */
     @JsonProperty("tags")

@@ -186,11 +186,18 @@ public class Client {
 		}
 	}
 
+
+	/**
+	 * Retrieve the system configuration
+	 */
+	public SystemConfig systemConfig() throws ClientException {
+		return get("/system", SystemConfig.class);
+	}
+
 	/**
 	 * Retrieve a team.
 	 */
-	public Team team(final String teamID)
-			throws ClientException {
+	public Team team(final String teamID) throws ClientException {
 		return get("/teams/" + teamID, Team.class);
 	}
 
