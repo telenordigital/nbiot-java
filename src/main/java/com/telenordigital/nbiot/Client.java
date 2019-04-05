@@ -141,8 +141,8 @@ public class Client {
 	/**
 	 * generic POST on a resource
 	 */
-	private <T> T create(
-			final String path, final T template, final Class<T> cls)
+	private <T, U> U create(
+			final String path, final T template, final Class<U> cls)
 			throws ClientException {
 		try {
 			return Unirest
@@ -204,8 +204,30 @@ public class Client {
 	/**
 	 * Create a new team.
 	 */
-	public Team createTeam(final Team template) throws ClientException {
-		return create("/teams", template, Team.class);
+	public Team createTeam(final Team team) throws ClientException {
+		return create("/teams", team, Team.class);
+	}
+
+	/**
+	 * Update a team member role.
+	 */
+	public Member updateTeamMemberRole(final String teamID, final String userID, final String role) throws ClientException {
+		Member member = new ImmutableMember.Builder().userID(userID).build();
+		return update(String.format("/teams/%s/members/%s", teamID, userID), member, Member.class);
+	}
+
+	/**
+	 * Delete a team member.
+	 */
+	public void deleteTeamMember(final String teamID, final String userID) throws ClientException {
+		delete(String.format("/teams/%s/members/%s", teamID, userID));
+	}
+
+	/**
+	 * Delete a team tag.
+	 */
+	public void deleteTeamTag(final String teamID, final String key) throws ClientException {
+		delete(String.format("/teams/%s/tags/%s", teamID, key));
 	}
 
 	/**
@@ -220,6 +242,43 @@ public class Client {
 	 */
 	public void deleteTeam(final String teamID) throws ClientException {
 		delete("/teams/" + teamID);
+	}
+
+
+	/**
+	 * Retrieve an invite.
+	 */
+	public Invite invite(final String teamID, final String code) throws ClientException {
+		return get(String.format("/teams/%s/invites/%s", teamID, code), Invite.class);
+	}
+
+	/**
+	 * Retrieve all invites to a team.
+	 */
+	public Invite[] invites(final String teamID) throws ClientException {
+		return get(String.format("/teams/%s/invites", teamID), Invite.InviteList.class).invites();
+	}
+
+	/**
+	 * Create a new invite.
+	 */
+	public Invite createInvite(final String teamID) throws ClientException {
+		return create(String.format("/teams/%s/invites", teamID), null, Invite.class);
+	}
+
+	/**
+	 * Accept an invite.
+	 */
+	public Team acceptInvite(final String code) throws ClientException {
+		Invite invite = new ImmutableInvite.Builder().code(code).createdAt(0).build();
+		return create("/teams/accept", invite, Team.class);
+	}
+
+	/**
+	 * Delete an invite.
+	 */
+	public void deleteInvite(final String teamID, final String code) throws ClientException {
+		delete(String.format("/teams/%s/invites/%s", teamID, code));
 	}
 
 

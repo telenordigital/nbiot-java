@@ -1,5 +1,7 @@
 package com.telenordigital.nbiot;
 
+import org.apache.http.HttpStatus;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -14,6 +16,17 @@ public class TeamTest {
 		team = client.createTeam(team);
 
 		client.teams();
+		
+		Invite iv = client.createInvite(team.id());
+		client.invites(team.id());
+		try {
+			client.acceptInvite(iv.code());
+		} catch (ClientException ex) {
+			if (ex.status() != HttpStatus.SC_CONFLICT) {
+				throw ex;
+			}
+		}
+		client.deleteInvite(team.id(), iv.code());
 
 		try {
 			client.updateTeam(team);
