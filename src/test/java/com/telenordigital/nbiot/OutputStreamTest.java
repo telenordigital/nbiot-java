@@ -18,7 +18,7 @@ public class OutputStreamTest {
 		Collection collection = client.createCollection(new ImmutableCollection.Builder().build());
 
 		try {
-			WebSocketClient wsClient = client.collectionOutput(collection.id(), handler -> {
+			WebSocketClient wsClient = client.outputStream(collection.id(), handler -> {
 				handler.onConnect((session -> logger.info("Handler connect")));
 				handler.onError(((session, error) -> logger.warning("Handler error")));
 				handler.onClose((code, reason) -> logger.info("Handler close"));

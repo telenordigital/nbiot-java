@@ -468,14 +468,14 @@ public class Client {
 	/**
 	 * Receive data messages sent by all devices in a collection.
 	 */
-	public WebSocketClient collectionOutput(final String collectionID, Consumer<OutputStreamHandler> handler) {
+	public WebSocketClient outputStream(final String collectionID, Consumer<OutputStreamHandler> handler) {
 		return initiateDataMessageStream("/collections/" + collectionID, handler);
 	}
 
 	/**
 	 * Receive data messages sent by a device.
 	 */
-	public WebSocketClient deviceOutput(final String collectionID, final String deviceID, Consumer<OutputStreamHandler> handler) {
+	public WebSocketClient outputStream(final String collectionID, final String deviceID, Consumer<OutputStreamHandler> handler) {
 		return initiateDataMessageStream("/collections/" + collectionID + "/devices/" + deviceID, handler);
 	}
 

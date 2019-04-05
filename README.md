@@ -87,7 +87,7 @@ OutputDataMessage[] data = client.data("<YOUR_COLLECTION_ID>", "<YOUR_DEVICE_ID>
 ```java
 Client client = new Client();
 
-client.collectionOutput("<YOUR_COLLECTION_ID>", handler -> {
+client.outputStream("<YOUR_COLLECTION_ID>", handler -> {
     handler.onConnect((session -> logger.info("Handler connect")));
     handler.onError(((session, error) -> logger.warning("Handler error")));
     handler.onClose((code, reason) -> logger.info("Handler close"));
