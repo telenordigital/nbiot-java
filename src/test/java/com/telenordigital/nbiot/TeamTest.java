@@ -14,21 +14,20 @@ public class TeamTest {
 		tags.put("name", "The test team");
 		Team team = new ImmutableTeam.Builder().tags(tags).build();
 		team = client.createTeam(team);
-
-		client.teams();
-		
-		Invite iv = client.createInvite(team.id());
-		client.invites(team.id());
 		try {
-			client.acceptInvite(iv.code());
-		} catch (ClientException ex) {
-			if (ex.status() != HttpStatus.SC_CONFLICT) {
-				throw ex;
+			client.teams();
+			
+			Invite iv = client.createInvite(team.id());
+			client.invites(team.id());
+			try {
+				client.acceptInvite(iv.code());
+			} catch (ClientException ex) {
+				if (ex.status() != HttpStatus.SC_CONFLICT) {
+					throw ex;
+				}
 			}
-		}
-		client.deleteInvite(team.id(), iv.code());
+			client.deleteInvite(team.id(), iv.code());
 
-		try {
 			client.updateTeam(team);
 		} finally {
 			client.deleteTeam(team.id());
