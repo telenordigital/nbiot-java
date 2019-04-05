@@ -239,6 +239,7 @@ public class Client {
 
 	/**
 	 * Update a team.
+	 * No tags are deleted, only added or updated.
 	 */
 	public Team updateTeam(final Team team) throws ClientException {
 		return update("/teams/" + team.id(), team, Team.class);
@@ -312,9 +313,17 @@ public class Client {
 
 	/**
 	 * Update a collection.
+	 * No tags are deleted, only added or updated.
 	 */
 	public Collection updateCollection(final Collection collection) throws ClientException {
 		return update("/collections/" + collection.id(), collection, Collection.class);
+	}
+
+	/**
+	 * Delete a collection tag.
+	 */
+	public void deleteCollectionTag(final String collectionID, final String key) throws ClientException {
+		delete(String.format("/collections/%s/tags/%s", collectionID, key));
 	}
 
 	/**
@@ -381,9 +390,17 @@ public class Client {
 
 	/**
 	 * Update a device.
+	 * No tags are deleted, only added or updated.
 	 */
 	public Device updateDevice(final String collectionID, final Device device) throws ClientException {
 		return update("/collections/" + collectionID + "/devices/" + device.id(), device, Device.class);
+	}
+
+	/**
+	 * Delete a device tag.
+	 */
+	public void deleteDeviceTag(final String collectionID, final String deviceID, final String key) throws ClientException {
+		delete(String.format("/collections/%s/devices/%s/tags/%s", collectionID, deviceID, key));
 	}
 
 	/**
@@ -452,9 +469,17 @@ public class Client {
 
 	/**
 	 * Update an output.
+	 * No tags are deleted, only added or updated.
 	 */
 	public Output updateOutput(final String collectionID, final Output output) throws ClientException {
 		return update("/collections/" + collectionID + "/outputs/" + output.id(), output, Output.class);
+	}
+
+	/**
+	 * Delete a output tag.
+	 */
+	public void deleteOutputTag(final String collectionID, final String outputID, final String key) throws ClientException {
+		delete(String.format("/collections/%s/outputs/%s/tags/%s", collectionID, outputID, key));
 	}
 
 	/**

@@ -39,7 +39,13 @@ Just include the following in your `pom.xml`:
         <version>0.2.0</version>
     </dependency>
 ```
+
+## Updating resources
+
+The various `Client.update*` methods work via HTTP PATCH, which means they will only modify or set fields, not delete them.  There are special `Client.delete*Tag` methods for deleting tags.
+
 ## Sample code
+
 Below you will find some examples on how to use the client.
 
 ### Fetching data
