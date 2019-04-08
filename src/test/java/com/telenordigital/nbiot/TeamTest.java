@@ -4,7 +4,10 @@ import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 
 public class TeamTest {
 	@Test
@@ -18,15 +21,18 @@ public class TeamTest {
 			client.teams();
 			
 			Invite iv = client.createInvite(team.id());
-			client.invites(team.id());
 			try {
-				client.acceptInvite(iv.code());
-			} catch (ClientException ex) {
-				if (ex.status() != HttpStatus.SC_CONFLICT) {
-					throw ex;
-				}
+				client.invites(team.id());
+				ClientException ex = assertThrows(ClientException.class, new ThrowingRunnable(){
+					@Override
+					public void run() throws Throwable {
+						client.acceptInvite(iv.code());
+					}
+				});
+				assertEquals(HttpStatus.SC_CONFLICT, ex.status());
+			} finally {
+				client.deleteInvite(team.id(), iv.code());
 			}
-			client.deleteInvite(team.id(), iv.code());
 
 			client.updateTeam(team);
 		} finally {

@@ -98,7 +98,7 @@ public class Client {
 					.header(TOKEN_HEADER, token)
 					.asString();
 			if (resp.getStatus() == HttpStatus.SC_FORBIDDEN) {
-				throw new ClientException(resp.getBody(), resp.getStatus());
+				throw new ClientException(resp);
 			}
 
 		} catch (UnirestException ex) {
@@ -112,10 +112,14 @@ public class Client {
 	private <T> T get(final String path, final Class<T> cls)
 			throws ClientException {
 		try {
-			return Unirest
+			final HttpResponse<T> resp = Unirest
 					.get(endpoint + path)
 					.header(TOKEN_HEADER, token)
-					.asObject(cls).getBody();
+					.asObject(cls);
+			if (resp.getStatus() >= 300) {
+				throw new ClientException(resp);
+			}
+			return resp.getBody();
 		} catch (final UnirestException ue) {
 			throw new ClientException(ue);
 		}
@@ -126,13 +130,17 @@ public class Client {
 		try {
 			Instant since = parameters.since();
 			Instant until = parameters.until();
-			return Unirest
+			final HttpResponse<OutputDataMessageInternal.OutputDataMessageListInternal> resp = Unirest
 					.get(endpoint + path)
 					.header(TOKEN_HEADER, token)
 					.queryString("limit", parameters.limit())
 					.queryString("since", since != null ? since.toEpochMilli() : null)
 					.queryString("until", until != null ? until.toEpochMilli() : null)
-					.asObject(OutputDataMessageInternal.OutputDataMessageListInternal.class).getBody();
+					.asObject(OutputDataMessageInternal.OutputDataMessageListInternal.class);
+			if (resp.getStatus() >= 300) {
+				throw new ClientException(resp);
+			}
+			return resp.getBody();
 		} catch (final UnirestException ue) {
 			throw new ClientException(ue);
 		}
@@ -141,16 +149,18 @@ public class Client {
 	/**
 	 * generic POST on a resource
 	 */
-	private <T, U> U create(
-			final String path, final T template, final Class<U> cls)
+	private <T, U> U create(final String path, final T template, final Class<U> cls)
 			throws ClientException {
 		try {
-			return Unirest
+			final HttpResponse<U> resp = Unirest
 					.post(endpoint + path)
 					.header(TOKEN_HEADER, token)
 					.body(template)
-					.asObject(cls)
-					.getBody();
+					.asObject(cls);
+			if (resp.getStatus() >= 300) {
+				throw new ClientException(resp);
+			}
+			return resp.getBody();
 		} catch (final UnirestException ue) {
 			throw new ClientException(ue);
 		}
@@ -162,12 +172,15 @@ public class Client {
 	private <T> T update(final String path, T updated, final Class<T> cls)
 			throws ClientException {
 		try {
-			return Unirest
+			final HttpResponse<T> resp = Unirest
 					.patch(endpoint + path)
 					.header(TOKEN_HEADER, token)
 					.body(updated)
-					.asObject(cls)
-					.getBody();
+					.asObject(cls);
+			if (resp.getStatus() >= 300) {
+				throw new ClientException(resp);
+			}
+			return resp.getBody();
 		} catch (final UnirestException ue) {
 			throw new ClientException(ue);
 		}
@@ -178,9 +191,13 @@ public class Client {
 	 */
 	private void delete(final String path) throws ClientException {
 		try {
-			Unirest.delete(endpoint + path)
+			final HttpResponse<String> resp = Unirest
+					.delete(endpoint + path)
 					.header(TOKEN_HEADER, token)
 					.asString();
+			if (resp.getStatus() >= 300) {
+				throw new ClientException(resp);
+			}
 		} catch (final UnirestException ue) {
 			throw new ClientException(ue);
 		}
@@ -307,8 +324,8 @@ public class Client {
 	/**
 	 * Create a new collection.
 	 */
-	public Collection createCollection(final Collection template) throws ClientException {
-		return create("/collections", template, Collection.class);
+	public Collection createCollection(final Collection collection) throws ClientException {
+		return create("/collections", collection, Collection.class);
 	}
 
 	/**
@@ -366,6 +383,13 @@ public class Client {
 		return mapDataMessagesFromInternal(internalDataMessageList);
 	}
 
+	/**
+	 * Broadcast a messsage to all devices in a collection.
+	 */
+	public BroadcastResult broadcast(final String collectionID, final DownstreamMessage msg) throws ClientException {
+		return create(String.format("/collections/%s/to", collectionID), msg, BroadcastResult.class);
+	}
+
 
 	/**
 	 * Retrieve a device.
@@ -384,8 +408,8 @@ public class Client {
 	/**
 	 * Create a device.
 	 */
-	public Device createDevice(final String collectionID, final Device template) throws ClientException {
-		return create("/collections/" + collectionID + "/devices", template, Device.class);
+	public Device createDevice(final String collectionID, final Device device) throws ClientException {
+		return create("/collections/" + collectionID + "/devices", device, Device.class);
 	}
 
 	/**
@@ -445,6 +469,13 @@ public class Client {
 		return mapDataMessagesFromInternal(internalDataMessageList);
 	}
 
+	/**
+	 * Send a messsage to a device.
+	 */
+	public void send(final String collectionID, final String deviceID, final DownstreamMessage msg) throws ClientException {
+		create(String.format("/collections/%s/devices/%s/to", collectionID, deviceID), msg, Object.class);
+	}
+
 
 	/**
 	 * Retrieve an output.
@@ -463,8 +494,8 @@ public class Client {
 	/**
 	 * Create an output.
 	 */
-	public Output createOutput(final String collectionID, final Output template) throws ClientException {
-		return create("/collections/" + collectionID + "/outputs", template, Output.class);
+	public Output createOutput(final String collectionID, final Output output) throws ClientException {
+		return create("/collections/" + collectionID + "/outputs", output, Output.class);
 	}
 
 	/**
