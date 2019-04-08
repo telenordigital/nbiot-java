@@ -44,6 +44,20 @@ public interface Output {
     @Nullable
     Map<String, Object> config();
 
+    /**
+     * Whether the output is enabled.
+     */
+    @JsonProperty("enabled")
+    @Nullable
+    Boolean enabled();
+
+    /**
+     * Output tags.
+     */
+    @JsonProperty("tags")
+    @Nullable
+    Map<String, String> tags();
+
     @Value.Immutable
     @Value.Style(builder = "new")
     @JsonDeserialize(builder = ImmutableOutputList.Builder.class)

@@ -503,7 +503,21 @@ public class Client {
 	 * No tags are deleted, only added or updated.
 	 */
 	public Output updateOutput(final String collectionID, final Output output) throws ClientException {
-		return update("/collections/" + collectionID + "/outputs/" + output.id(), output, Output.class);
+		return update(String.format("/collections/%s/outputs/%s", collectionID, output.id()), output, Output.class);
+	}
+
+	/**
+	 * Retrieve output logs.
+	 */
+	public OutputLogEntry[] outputLogs(final String collectionID, final String outputID) throws ClientException {
+		return get(String.format("/collections/%s/outputs/%s/logs", collectionID, outputID), OutputLogEntry.OutputLog.class).logs();
+	}
+
+	/**
+	 * Retrieve output status.
+	 */
+	public OutputStatus outputStatus(final String collectionID, final String outputID) throws ClientException {
+		return get(String.format("/collections/%s/outputs/%s/status", collectionID, outputID), OutputStatus.class);
 	}
 
 	/**
