@@ -124,6 +124,7 @@
 				<configuration>
 					<forkMode>pertest</forkMode>
 					<useFile>false</useFile>
+					<trimStackTrace>false</trimStackTrace>
 				</configuration>
 			</plugin>
 

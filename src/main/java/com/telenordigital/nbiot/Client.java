@@ -14,7 +14,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.ObjectMapper;
-
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
@@ -46,7 +46,8 @@ public class Client {
 		Unirest.setObjectMapper(new ObjectMapper() {
 			private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper
 					= new com.fasterxml.jackson.databind.ObjectMapper()
-					.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+					.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+					.setSerializationInclusion(Include.NON_NULL);
 
 			public <T> T readValue(String value, Class<T> valueType) {
 				try {
@@ -481,21 +482,22 @@ public class Client {
 	 * Retrieve an output.
 	 */
 	public Output output(final String collectionID, final String outputID) throws ClientException {
-		return get("/collections/" + collectionID + "/outputs/" + outputID, Output.class);
+		return get("/collections/" + collectionID + "/outputs/" + outputID, OutputInternal.class).toOutput();
 	}
 
 	/**
 	 * Retrieve all outputs in a collection.
 	 */
 	public Output[] outputs(final String collectionID) throws ClientException {
-		return get("/collections/" + collectionID + "/outputs", Output.OutputList.class).outputs();
+		OutputInternal[] outputs = get("/collections/" + collectionID + "/outputs", OutputInternal.OutputList.class).outputs();
+		return Stream.of(outputs).map(o -> o.toOutput()).toArray(Output[]::new);
 	}
 
 	/**
 	 * Create an output.
 	 */
 	public Output createOutput(final String collectionID, final Output output) throws ClientException {
-		return create("/collections/" + collectionID + "/outputs", output, Output.class);
+		return create("/collections/" + collectionID + "/outputs", output.toInternal(), OutputInternal.class).toOutput();
 	}
 
 	/**
@@ -503,7 +505,7 @@ public class Client {
 	 * No tags are deleted, only added or updated.
 	 */
 	public Output updateOutput(final String collectionID, final Output output) throws ClientException {
-		return update(String.format("/collections/%s/outputs/%s", collectionID, output.id()), output, Output.class);
+		return update(String.format("/collections/%s/outputs/%s", collectionID, output.id()), output.toInternal(), OutputInternal.class).toOutput();
 	}
 
 	/**

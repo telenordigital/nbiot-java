@@ -14,10 +14,10 @@ public class OutputTest {
 		collection = client.createCollection(collection);
 
 		try {
-			Map<String, Object> config = new HashMap<>();
-			config.put("url", Config.DEFAULT_ENDPOINT);
-			Output output = client.createOutput(collection.id(), new ImmutableOutput.Builder().type("webhook").config(config).build());
+			Output output = new ImmutableWebHookOutput.Builder().url(Config.DEFAULT_ENDPOINT).build();
+			output = client.createOutput(collection.id(), output);
 			try {
+				client.updateOutput(collection.id(), output);
 				client.outputLogs(collection.id(), output.id());
 				client.outputStatus(collection.id(), output.id());
 			} finally {
