@@ -208,8 +208,8 @@ public class Client {
 	/**
 	 * Retrieve the system configuration
 	 */
-	public SystemConfig systemConfig() throws ClientException {
-		return get("/system", SystemConfig.class);
+	public SystemDefaults systemDefaults() throws ClientException {
+		return get("/system", SystemDefaults.class);
 	}
 
 	/**

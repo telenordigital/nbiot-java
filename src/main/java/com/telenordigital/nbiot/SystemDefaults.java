@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  */
 @Value.Immutable
 @Value.Style(builder = "new")
-@JsonDeserialize(builder = ImmutableSystemConfig.Builder.class)
-public interface SystemConfig {
+@JsonDeserialize(builder = ImmutableSystemDefaults.Builder.class)
+public interface SystemDefaults {
     /**
      * The default field mask
      */

@@ -9,7 +9,7 @@ public class ClientTest {
 	}
 
 	@Test
-	public void TestSystemConfig() throws Exception {
-		new Client().systemConfig();
+	public void TestSystemDefaults() throws Exception {
+		new Client().systemDefaults();
 	}
 }
