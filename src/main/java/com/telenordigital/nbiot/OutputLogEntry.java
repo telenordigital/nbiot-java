@@ -21,10 +21,10 @@ public interface OutputLogEntry {
     String message();
 
     /**
-     * The time the entry was received.
+     * The time the entry was received, in milliseconds since Unix epoch.
      */
-    @JsonProperty("received")
-    long received();
+    @JsonProperty("timestamp")
+    long timestamp();
 
     /**
      * The number of times the entry was repeated.
