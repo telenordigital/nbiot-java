@@ -29,7 +29,7 @@ public class ClientException extends Exception {
 		String msg = "";
 		try {
 			msg = new String(resp.getRawBody().readAllBytes());
-		} catch(IOException _) {}
+		} catch(IOException x) {}
 		this.errorMessage = msg;
 		this.statusCode = resp.getStatus();
 	}
